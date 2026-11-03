@@ -1,0 +1,88 @@
+[build-system]
+requires = ["setuptools>=77.0.3"]                 # 77+ is needed for `license = "MIT"` (SPDX string)
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simplibs-extractor-python"
+version = "0.1.0"
+description = "The Python add-on of simplibs-extractor: file rules for Python projects, steps that remove comments, docstrings, imports and decorators (found with ast and tokenize, never with a regex), an outline step and five ready profiles."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"                        # the README badge and "Requires Python" must say the same
+keywords = [
+    "extractor",
+    "python",
+    "code-extractor",
+    "project-to-text",
+    "ast",
+    "tokenize",
+    "comments",
+    "docstrings",
+    "outline",
+    "markdown",
+    "llm",
+    "context",
+    "plugin",
+    "simplibs",
+    "simplibs-extractor",
+    "developer-tools",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+dependencies = [
+    "simplibs-extractor>=0.2.0",                  # Profile, register_profile, by_suffix (CHECK: the first version that has by_suffix)
+    "simplibs-text>=0.2.0",                       # remove_spans, Span (0.2.0), CLEANUP_WHITESPACE and COMPACT
+    "simplibs-actions>=0.2.2",                    # create_action: the steps as pipeline actions
+    "simplibs-path>=0.2.0",                       # IGNORE_VCS and the path rules (HasSuffix, NameIs, AnyParentNameIs)
+    "simplibs-rules>=0.4.0",                      # Rule, IsIn, Equals, StartsWith, Regex
+    "simplibs-validate>=0.3.2",                   # @validate_call on every public function
+    "simplibs-exception>=1.1.4",                  # the card of a source that cannot be read
+]
+
+[[project.authors]]
+name = "Dalibor Sova (Sudip2708)"
+email = "daliborsova@seznam.cz"
+
+[project.urls]
+Homepage = "https://github.com/simplibs/simplibs-extractor-python"
+Repository = "https://github.com/simplibs/simplibs-extractor-python"
+Issues = "https://github.com/simplibs/simplibs-extractor-python/issues"
+Changelog = "https://github.com/simplibs/simplibs-extractor-python/blob/main/CHANGELOG.md"
+
+[project.entry-points."simplibs.extractor.plugins"]
+python = "simplibs.extractor_python:register_all"   # the extractor finds the add-on through this line
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0",          # the `subtests` fixture is built in since pytest 9.0
+    "pytest-cov>=5.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-v -rs"                                # -rs lists every skipped test with its reason
+
+[tool.coverage.run]
+branch = true
+source = ["simplibs.extractor_python"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"simplibs.extractor_python" = ["py.typed"]        # without this section py.typed is NOT in the wheel
